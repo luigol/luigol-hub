@@ -130,6 +130,96 @@
 
     footer{ margin-top: 10vh; text-align:center; color: #8c8c8c; font-size: 13px; }
 
+    /* Language Selector Styles */
+    .language-selector {
+      position: fixed;
+      top: var(--space);
+      right: var(--space);
+      z-index: 1000;
+    }
+
+    .lang-btn {
+      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--glass-border);
+      background: var(--glass-bg);
+      color: var(--text);
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      line-height: 1;
+      cursor: pointer;
+      box-shadow: 0 1px 0 rgba(255,255,255,.06) inset, 0 10px 24px rgba(0,0,0,.25);
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, background-color .18s ease;
+      will-change: transform;
+    }
+
+    .lang-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 34px rgba(0,0,0,.38);
+      border-color: rgba(220,220,220,.55);
+      background: rgba(255,255,255,.06);
+    }
+
+    .lang-btn:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 4px var(--ring);
+    }
+
+    .lang-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 8px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(8px);
+      box-shadow: var(--shadow);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: opacity .2s ease, visibility .2s ease, transform .2s ease;
+      min-width: 140px;
+    }
+
+    .lang-dropdown.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .lang-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: background-color .15s ease;
+      border-radius: var(--radius);
+      margin: 4px;
+    }
+
+    .lang-option:hover {
+      background: rgba(255,255,255,.08);
+    }
+
+    .lang-option:first-child {
+      margin-top: 8px;
+    }
+
+    .lang-option:last-child {
+      margin-bottom: 8px;
+    }
+
     /* Acessibilidade: reduzir animações */
     @media (prefers-reduced-motion: reduce){
       .btn{ transition: none }
@@ -138,6 +228,18 @@
   </style>
 </head>
 <body>
+  <!-- Language Selector -->
+  <div class="language-selector">
+    <button class="lang-btn" id="langBtn" aria-label="Selecionar idioma">
+      <span id="currentFlag">🇧🇷</span>
+    </button>
+    <div class="lang-dropdown" id="langDropdown">
+      <a href="#" class="lang-option" data-lang="pt">🇧🇷 Português</a>
+      <a href="#" class="lang-option" data-lang="en">🇺🇸 English</a>
+      <a href="#" class="lang-option" data-lang="es">🇪🇸 Español</a>
+    </div>
+  </div>
+
   <main>
     <!-- Círculo no topo para a foto de perfil -->
     <div class="avatar-wrap" aria-hidden="true">
@@ -145,13 +247,13 @@
     </div>
 
     <header>
-      <h1>Luigol</h1>
-      <p class="subtitle">Luigi • São Paulo / Maceió • 21 Anos</p>
+      <h1 id="title">Luigol</h1>
+      <p class="subtitle" id="subtitle">Luigi • São Paulo / Maceió • 21 Anos</p>
     </header>
 
     <!-- Descrição da sua história -->
     <section class="descricao" aria-label="Minha história">
-      <p>
+      <p id="description">
         Sou um estudante de Engenharia da Computação na UFAL (Universidade Federal de Alagoas). Falo português, inglês e espanhol.
         Faço parte do programa EDGE Academy do Centro de Inovação EDGE. Tenho um canal no Youtube sobre tecnologia e educação.
       </p>
@@ -166,13 +268,98 @@
     </nav>
 
     <footer>
-      © <span id="ano"></span> Luigol. Todos os direitos reservados.
+      © <span id="ano"></span> <span id="footer">Luigol. Todos os direitos reservados.</span>
     </footer>
   </main>
 
   <script>
-    // Atualiza o ano automaticamente
+    // Translations object
+    const translations = {
+      pt: {
+        title: "Luigol",
+        subtitle: "Luigi • São Paulo / Maceió • 21 Anos",
+        description: "Sou um estudante de Engenharia da Computação na UFAL (Universidade Federal de Alagoas). Falo português, inglês e espanhol. Faço parte do programa EDGE Academy do Centro de Inovação EDGE. Tenho um canal no Youtube sobre tecnologia e educação.",
+        footer: "Luigol. Todos os direitos reservados."
+      },
+      en: {
+        title: "Luigol",
+        subtitle: "Luigi • São Paulo / Maceió • 21 Years Old",
+        description: "I'm a Computer Engineering student at UFAL (Federal University of Alagoas). I speak Portuguese, English and Spanish. I'm part of the EDGE Academy program at EDGE Innovation Center. I have a YouTube channel about technology and education.",
+        footer: "Luigol. All rights reserved."
+      },
+      es: {
+        title: "Luigol",
+        subtitle: "Luigi • São Paulo / Maceió • 21 Años",
+        description: "Soy un estudiante de Ingeniería en Computación en UFAL (Universidad Federal de Alagoas). Hablo portugués, inglés y español. Formo parte del programa EDGE Academy del Centro de Innovación EDGE. Tengo un canal en el YouTube sobre tecnología y educación.",
+        footer: "Luigol. Todos los derechos reservados."
+      }
+    };
+
+    // Language management
+    let currentLanguage = localStorage.getItem('selectedLanguage') || 'pt';
+
+    // Update year automatically
     document.getElementById('ano').textContent = new Date().getFullYear();
+
+    // Update content based on current language
+    function updateContent(lang) {
+      const elements = {
+        title: document.getElementById('title'),
+        subtitle: document.getElementById('subtitle'),
+        description: document.getElementById('description'),
+        footer: document.getElementById('footer')
+      };
+
+      const translation = translations[lang];
+      
+      Object.keys(elements).forEach(key => {
+        if (elements[key] && translation[key]) {
+          elements[key].textContent = translation[key];
+        }
+      });
+
+      // Update flag
+      const flags = { pt: '🇧🇷', en: '🇺🇸', es: '🇪🇸' };
+      document.getElementById('currentFlag').textContent = flags[lang];
+      
+      // Update HTML lang attribute
+      document.documentElement.lang = lang === 'pt' ? 'pt-br' : lang;
+    }
+
+    // Language selector functionality
+    const langBtn = document.getElementById('langBtn');
+    const langDropdown = document.getElementById('langDropdown');
+    const langOptions = document.querySelectorAll('.lang-option');
+
+    // Toggle dropdown
+    langBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      langDropdown.classList.toggle('show');
+    });
+
+    // Handle language selection
+    langOptions.forEach(option => {
+      option.addEventListener('click', (e) => {
+        e.preventDefault();
+        const selectedLang = option.dataset.lang;
+        
+        currentLanguage = selectedLang;
+        localStorage.setItem('selectedLanguage', selectedLang);
+        
+        updateContent(selectedLang);
+        langDropdown.classList.remove('show');
+      });
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!langBtn.contains(e.target) && !langDropdown.contains(e.target)) {
+        langDropdown.classList.remove('show');
+      }
+    });
+
+    // Initialize with saved language
+    updateContent(currentLanguage);
   </script>
 </body>
 </html>
