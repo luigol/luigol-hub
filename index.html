@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Luigol</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0a0a0a;            /* Preto do tema */
+      --text:#f5f5f5;          /* Texto principal */
+      --muted:#b3b3b3;         /* Texto secundário */
+      --glass-border: rgba(200,200,200,.35); /* Borda cinza translúcida */
+      --glass-bg: rgba(255,255,255,.04);     /* Fundo "vidro" bem sutil */
+      --ring: rgba(255,255,255,.12);
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 18px;
+      --space: clamp(16px, 2.5vmin, 28px);
+      --maxw: 860px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(80vmax 80vmax at 50% -10%, rgba(255,255,255,.06), transparent 40%),
+                  radial-gradient(40vmax 40vmax at 80% 10%, rgba(255,255,255,.05), transparent 60%),
+                  var(--bg);
+      color:var(--text);
+      line-height:1.65;
+      -webkit-font-smoothing:antialiased;
+      text-rendering:optimizeLegibility;
+      display:grid;
+      place-items:start center; /* alinha topo-centro */
+      padding: calc(18vh - 80px) var(--space) 12vh;
+    }
+
+    main{width:100%; max-width:var(--maxw)}
+
+    /* Avatar redondo no topo, centralizado */
+    .avatar-wrap{
+      display:flex;
+      justify-content:center;
+      margin: 0 auto var(--space);
+      position:relative;
+      width: 168px; height: 168px;
+    }
+    .avatar{
+      width:100%; height:100%;
+      border-radius:50%;
+      border:2px solid var(--glass-border);
+      background: #111 center/cover no-repeat;
+      box-shadow: var(--shadow);
+      outline: 8px solid rgba(255,255,255,.03); /* aura sutil */
+    }
+    /* Placeholder: substitua a URL abaixo pela sua foto */
+    .avatar{ background-image:url("IMG_3044.jpg"); }
+
+    header{ text-align:center; }
+    h1{
+      font-weight:800; letter-spacing:.3px; margin:.2rem 0 .25rem; font-size:clamp(28px, 4.2vw, 44px);
+    }
+    .subtitle{ color:var(--muted); font-weight:400; margin:0 0 var(--space); font-size:clamp(14px, 1.7vw, 16px); }
+
+    /* Descrição */
+    .descricao{
+      margin: 0 auto var(--space);
+      padding: clamp(14px, 1.8vmin, 18px) clamp(16px, 2.2vmin, 22px);
+      text-align:center;
+      font-size: clamp(16px, 2.1vmin, 18px);
+      color: var(--text);
+      background: transparent; /* apenas texto sobre o fundo escuro */
+      max-width: min(var(--maxw), 70ch);
+    }
+
+    /* Botões "de vidro" */
+    .botoes{
+      display:flex; flex-wrap:wrap; gap:12px; justify-content:center;
+      margin-top: calc(var(--space) * .25);
+    }
+    .btn{
+      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(8px);
+      border:1px solid var(--glass-border);
+      background: var(--glass-bg);
+      color:var(--text);
+      border-radius: 999px; /* bem arredondado */
+      padding: 12px 20px;
+      text-decoration:none; font-weight:600; letter-spacing:.2px;
+      display:inline-flex; align-items:center; gap:.55rem;
+      box-shadow: 0 1px 0 rgba(255,255,255,.06) inset, 0 10px 24px rgba(0,0,0,.25);
+      transform: translateZ(0); /* ativa GPU e evita blur jagged */
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, background-color .18s ease;
+      will-change: transform;
+    }
+    .btn:focus-visible{ outline: none; box-shadow: 0 0 0 4px var(--ring); }
+    .btn:hover{ transform: translateY(-1px); box-shadow: 0 14px 34px rgba(0,0,0,.38); border-color: rgba(220,220,220,.55); background: rgba(255,255,255,.06); }
+    
+    /* Custom hover effects for specific buttons */
+    .btn:nth-child(1):hover { /* Youtube button */
+      background: rgba(255, 0, 0, 0.15);
+      border-color: rgba(255, 0, 0, 0.4);
+      color: #ff0000;
+    }
+    
+    .btn:nth-child(2):hover { /* Linkedin button */
+      background: rgba(0, 119, 181, 0.15);
+      border-color: rgba(0, 119, 181, 0.4);
+      color: #0077b5;
+    }
+    
+    .btn:nth-child(3):hover { /* Github button */
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.6);
+      color: #ffffff;
+    }
+    
+    .btn:nth-child(4):hover { /* Gols button */
+      background: rgba(255, 215, 0, 0.15);
+      border-color: rgba(255, 215, 0, 0.4);
+      color: #ffd700;
+    }
+    .btn:active{ transform: translateY(0); box-shadow: 0 6px 18px rgba(0,0,0,.38); }
+
+    /* Ícone minimalista via CSS */
+    .dot{ width:6px; height:6px; border-radius:50%; background: currentColor; opacity:.6 }
+
+    footer{ margin-top: 10vh; text-align:center; color: #8c8c8c; font-size: 13px; }
+
+    /* Acessibilidade: reduzir animações */
+    @media (prefers-reduced-motion: reduce){
+      .btn{ transition: none }
+      .btn:hover,.btn:active{ transform:none }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <!-- Círculo no topo para a foto de perfil -->
+    <div class="avatar-wrap" aria-hidden="true">
+      <div class="avatar" role="img" aria-label="Minha foto de perfil"></div>
+    </div>
+
+    <header>
+      <h1>Luigol</h1>
+      <p class="subtitle">Luigi • São Paulo / Maceió • 21 Anos</p>
+    </header>
+
+    <!-- Descrição da sua história -->
+    <section class="descricao" aria-label="Minha história">
+      <p>
+        Sou um estudante de Engenharia da Computação na UFAL (Universidade Federal de Alagoas). Falo português, inglês e espanhol.
+        Faço parte do programa EDGE Academy do Centro de Inovação EDGE. Tenho um canal no Youtube sobre tecnologia e educação.
+      </p>
+    </section>
+
+    <!-- Quatro botões transparentes com bordas cinzas e arredondadas, estilo vidro -->
+    <nav class="botoes" aria-label="Ações principais">
+      <a class="btn" href="https://www.youtube.com/@oluigol" aria-label="Botão 1"><span class="dot" aria-hidden="true"></span> Youtube</a>
+      <a class="btn" href="https://www.linkedin.com/in/luigol" aria-label="Botão 2"><span class="dot" aria-hidden="true"></span> Linkedin</a>
+      <a class="btn" href="https://github.com/luigol" aria-label="Botão 3"><span class="dot" aria-hidden="true"></span> Github</a>
+      <a class="btn" href="#" aria-label="Botão 4"><span class="dot" aria-hidden="true"></span> Gols</a>
+    </nav>
+
+    <footer>
+      © <span id="ano"></span> Luigol. Todos os direitos reservados.
+    </footer>
+  </main>
+
+  <script>
+    // Atualiza o ano automaticamente
+    document.getElementById('ano').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
