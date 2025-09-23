@@ -363,7 +363,7 @@
     // ===== CONFIGURATION =====
     const START_DATE = '2024-09-01'; // When Luigol started talking about Bitcoin
     const START_PRICE = 57430.34; // Bitcoin price when Luigol started talking about it
-    const CURRENT_PRICE = 112767.20; // Current Bitcoin price (fallback)
+    const CURRENT_PRICE = 112391.38; // Current Bitcoin price from CSV (fallback)
     // =========================
 
     // Translations object
@@ -542,19 +542,43 @@
     }
 
     function generateChartData(currentPrice = CURRENT_PRICE) {
-      // Generate sample data points from start to current price
-      const startDate = new Date(START_DATE);
-      const currentDate = new Date();
-      const daysDiff = Math.floor((currentDate - startDate) / (1000 * 60 * 60 * 24));
+      // Your starting point (when you started talking about Bitcoin)
+      const startPoint = { date: '2024-09-01', price: 57430.34 };
       
-      const data = [];
-      for (let i = 0; i <= daysDiff; i++) {
-        const date = new Date(startDate.getTime() + (i * 24 * 60 * 60 * 1000));
-        // Simple linear interpolation for demo (you can replace with real data later)
-        const progress = i / daysDiff;
-        const price = START_PRICE + (currentPrice - START_PRICE) * progress;
-        data.push([date.getTime(), price]);
-      }
+      // Real Bitcoin price data from CoinMarketCap CSV
+      const csvData = [
+        { date: '2024-09-30', price: 70215.19 },
+        { date: '2024-10-31', price: 96449.06 },
+        { date: '2024-11-30', price: 93429.20 },
+        { date: '2024-12-31', price: 102405.03 },
+        { date: '2025-01-31', price: 84373.01 },
+        { date: '2025-02-28', price: 82548.91 },
+        { date: '2025-03-31', price: 94207.31 },
+        { date: '2025-04-30', price: 104638.09 },
+        { date: '2025-05-31', price: 107135.33 },
+        { date: '2025-06-30', price: 115758.20 },
+        { date: '2025-07-31', price: 108236.71 },
+        { date: '2025-08-31', price: 112391.38 }
+      ];
+      
+      // Combine all data: start point + CSV data + current live price
+      const allData = [startPoint, ...csvData];
+      
+      // Add current live price as the last point
+      const today = new Date();
+      const currentDate = today.toISOString().split('T')[0]; // YYYY-MM-DD format
+      
+      // Convert to chart format
+      const data = allData.map(item => [
+        new Date(item.date).getTime(),
+        item.price
+      ]);
+      
+      // Add current live price as the final point
+      data.push([
+        new Date(currentDate).getTime(),
+        currentPrice
+      ]);
       
       return data;
     }
