@@ -55,6 +55,11 @@
       background: #111 center/cover no-repeat;
       box-shadow: var(--shadow);
       outline: 8px solid rgba(255,255,255,.03); /* aura sutil */
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .avatar:hover{
+      transform: scale(1.05);
+      box-shadow: 0 15px 40px rgba(0,0,0,.5);
     }
     /* Placeholder: substitua a URL abaixo pela sua foto */
     .avatar{ background-image:url("IMG_3044.jpg"); }
@@ -249,7 +254,7 @@
   <main>
     <!-- Círculo no topo para a foto de perfil -->
     <div class="avatar-wrap" aria-hidden="true">
-      <div class="avatar" role="img" aria-label="Minha foto de perfil"></div>
+      <div class="avatar" role="img" aria-label="Minha foto de perfil" onclick="window.location.href='mymory.html'" style="cursor: pointer;"></div>
     </div>
 
     <header>

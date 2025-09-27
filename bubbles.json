@@ -1,0 +1,54 @@
+[
+  {
+    "id": "bubble-0",
+    "title": "Fourth anniversary",
+    "description": "My birthday in Acopiara, Ceará",
+    "photo": "bubbles/2008-07-13T21-58-00/photo.JPG",
+    "date": "2008-07-13T21-58-00",
+    "folderName": "2008-07-13T21-58-00",
+    "hasPhoto": true,
+    "rawDate": "2008-07-13T21:58:00",
+    "size": 150,
+    "x": 10.0,
+    "y": 50
+  },
+  {
+    "id": "bubble-1",
+    "title": "Training at Pequeninos do Jockey",
+    "description": "São Paulo Jockey Club",
+    "photo": "bubbles/2013-03-09T15-23-00/photo.JPG",
+    "date": "2013-03-09T15-23-00",
+    "folderName": "2013-03-09T15-23-00",
+    "hasPhoto": true,
+    "rawDate": "2013-03-09T15:23:00",
+    "size": 150,
+    "x": 36.666666666666664,
+    "y": 50
+  },
+  {
+    "id": "bubble-2",
+    "title": "Two goals to the victory",
+    "description": "Amistosinho x União Mooca",
+    "photo": "bubbles/2024-05-11T11-30-00/photo.jpeg",
+    "date": "2024-05-11T11-30-00",
+    "folderName": "2024-05-11T11-30-00",
+    "hasPhoto": true,
+    "rawDate": "2024-05-11T11:30:00",
+    "size": 150,
+    "x": 63.33333333333333,
+    "y": 50
+  },
+  {
+    "id": "bubble-3",
+    "title": "A new chapter",
+    "description": "I'm building my social network.",
+    "photo": "bubbles/2025-09-27T11-00-00/photo.jpg",
+    "date": "2025-09-27T11-00-00",
+    "folderName": "2025-09-27T11-00-00",
+    "hasPhoto": true,
+    "rawDate": "2025-09-27T11:00:00",
+    "size": 150,
+    "x": 90.0,
+    "y": 50
+  }
+]
