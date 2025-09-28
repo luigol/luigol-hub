@@ -64,14 +64,38 @@ def scan_bubbles_folder(bubbles_path="bubbles"):
             
             # Check if photo exists
             photo_path = None
-            if config.get('has_photo') == 'True' and config.get('photo'):
-                photo_file = os.path.join(folder_path, config['photo'])
-                if os.path.exists(photo_file):
-                    photo_path = f"bubbles/{folder_name}/{config['photo']}"
+            if config.get('has_photo') == 'True':
+                # If photo is specified in config, use it
+                if config.get('photo'):
+                    photo_file = os.path.join(folder_path, config['photo'])
+                    if os.path.exists(photo_file):
+                        photo_path = f"bubbles/{folder_name}/{config['photo']}"
+                    else:
+                        print(f"WARNING: Photo '{config['photo']}' not found in '{folder_name}'")
+                        # Still set the path even if file doesn't exist (for case sensitivity issues)
+                        photo_path = f"bubbles/{folder_name}/{config['photo']}"
                 else:
-                    print(f"WARNING: Photo '{config['photo']}' not found in '{folder_name}'")
-                    # Still set the path even if file doesn't exist (for case sensitivity issues)
-                    photo_path = f"bubbles/{folder_name}/{config['photo']}"
+                    # Auto-detect photo files if not specified
+                    photo_extensions = ['.jpg', '.JPG', '.jpeg', '.JPEG', '.png', '.PNG', '.gif', '.GIF', '.webp', '.WEBP']
+                    found_photo = None
+                    
+                    for ext in photo_extensions:
+                        # Look for common photo filenames
+                        possible_names = ['photo', 'image', 'img', 'picture', 'pic']
+                        for name in possible_names:
+                            photo_file = os.path.join(folder_path, f"{name}{ext}")
+                            if os.path.exists(photo_file):
+                                found_photo = f"{name}{ext}"
+                                break
+                        
+                        if found_photo:
+                            break
+                    
+                    if found_photo:
+                        photo_path = f"bubbles/{folder_name}/{found_photo}"
+                        print(f"INFO: Auto-detected photo '{found_photo}' in '{folder_name}'")
+                    else:
+                        print(f"WARNING: No photo found in '{folder_name}' despite has_photo=True")
             
             # Create bubble data
             bubble_data = {

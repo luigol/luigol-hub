@@ -235,6 +235,10 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      user-select: none; /* Prevent text selection during swipe */
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
     }
 
     /* Grid Container */
@@ -318,8 +322,8 @@
       position: absolute;
       border-radius: 50%;
       cursor: pointer;
-      transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      will-change: transform;
+      transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: transform, left;
       overflow: hidden;
       border: 2px solid transparent;
       aspect-ratio: 1;
@@ -678,6 +682,13 @@
         this.currentTranslate = 0;
         this.isGridView = false;
         
+        // Swipe detection properties
+        this.swipeStartX = 0;
+        this.swipeStartY = 0;
+        this.swipeThreshold = 50; // Minimum distance for swipe
+        this.isSwipeActive = false;
+        this.swipeDirection = null;
+        
         this.init();
       }
 
@@ -955,7 +966,7 @@
           document.addEventListener('touchend', this.handleSliderRelease.bind(this));
         });
 
-        // Timeline container swipe
+        // Timeline container swipe and wheel
         this.timelineContainer.addEventListener('wheel', (e) => {
           e.preventDefault();
           if (e.deltaY > 0 && this.currentIndex < this.bubbles.length - 1) {
@@ -963,6 +974,98 @@
           } else if (e.deltaY < 0 && this.currentIndex > 0) {
             this.setActiveBubble(this.currentIndex - 1);
           }
+        });
+
+        // Touch events for swipe detection
+        this.timelineContainer.addEventListener('touchstart', (e) => {
+          this.swipeStartX = e.touches[0].clientX;
+          this.swipeStartY = e.touches[0].clientY;
+          this.isSwipeActive = true;
+        });
+
+        this.timelineContainer.addEventListener('touchmove', (e) => {
+          if (!this.isSwipeActive) return;
+          
+          const currentX = e.touches[0].clientX;
+          const currentY = e.touches[0].clientY;
+          const deltaX = currentX - this.swipeStartX;
+          const deltaY = currentY - this.swipeStartY;
+          
+          // Check if horizontal swipe is more significant than vertical
+          if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 10) {
+            e.preventDefault();
+            this.swipeDirection = deltaX > 0 ? 'right' : 'left';
+            
+            // Add visual feedback during swipe
+            this.timelineContainer.style.cursor = 'grabbing';
+            this.timelineContainer.style.opacity = '0.8';
+          }
+        });
+
+        this.timelineContainer.addEventListener('touchend', (e) => {
+          if (!this.isSwipeActive) return;
+          
+          const currentX = e.changedTouches[0].clientX;
+          const deltaX = currentX - this.swipeStartX;
+          
+          if (Math.abs(deltaX) > this.swipeThreshold) {
+            if (this.swipeDirection === 'left' && this.currentIndex < this.bubbles.length - 1) {
+              this.setActiveBubble(this.currentIndex + 1);
+            } else if (this.swipeDirection === 'right' && this.currentIndex > 0) {
+              this.setActiveBubble(this.currentIndex - 1);
+            }
+          }
+          
+          // Reset visual feedback
+          this.timelineContainer.style.cursor = '';
+          this.timelineContainer.style.opacity = '';
+          
+          this.isSwipeActive = false;
+          this.swipeDirection = null;
+        });
+
+        // Mouse events for desktop swipe
+        this.timelineContainer.addEventListener('mousedown', (e) => {
+          this.swipeStartX = e.clientX;
+          this.swipeStartY = e.clientY;
+          this.isSwipeActive = true;
+        });
+
+        this.timelineContainer.addEventListener('mousemove', (e) => {
+          if (!this.isSwipeActive) return;
+          
+          const deltaX = e.clientX - this.swipeStartX;
+          const deltaY = e.clientY - this.swipeStartY;
+          
+          // Check if horizontal movement is more significant than vertical
+          if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 10) {
+            this.swipeDirection = deltaX > 0 ? 'right' : 'left';
+            
+            // Add visual feedback during swipe
+            this.timelineContainer.style.cursor = 'grabbing';
+            this.timelineContainer.style.opacity = '0.8';
+          }
+        });
+
+        this.timelineContainer.addEventListener('mouseup', (e) => {
+          if (!this.isSwipeActive) return;
+          
+          const deltaX = e.clientX - this.swipeStartX;
+          
+          if (Math.abs(deltaX) > this.swipeThreshold) {
+            if (this.swipeDirection === 'left' && this.currentIndex < this.bubbles.length - 1) {
+              this.setActiveBubble(this.currentIndex + 1);
+            } else if (this.swipeDirection === 'right' && this.currentIndex > 0) {
+              this.setActiveBubble(this.currentIndex - 1);
+            }
+          }
+          
+          // Reset visual feedback
+          this.timelineContainer.style.cursor = '';
+          this.timelineContainer.style.opacity = '';
+          
+          this.isSwipeActive = false;
+          this.swipeDirection = null;
         });
 
         // Keyboard navigation
