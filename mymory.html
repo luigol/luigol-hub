@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>My memories</title>
+  <title>Mymories</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
@@ -28,8 +28,7 @@
 
     html, body {
       height: 100%;
-      overflow-x: hidden; /* Only hide horizontal overflow */
-      overflow-y: auto; /* Allow vertical scrolling if needed */
+      overflow: hidden; /* Hide all overflow to prevent scrollbars */
     }
 
     body {
@@ -42,7 +41,6 @@
       -webkit-font-smoothing: antialiased;
       text-rendering: optimizeLegibility;
       position: relative;
-      padding: 100px 0; /* Add padding to accommodate blur effects */
     }
 
     /* Header */
@@ -54,7 +52,7 @@
       z-index: 1000;
       padding: var(--space);
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
       -webkit-backdrop-filter: blur(8px);
       backdrop-filter: blur(8px);
@@ -63,6 +61,8 @@
     }
 
     .back-btn {
+      position: absolute;
+      left: var(--space);
       -webkit-backdrop-filter: blur(8px);
       backdrop-filter: blur(8px);
       border: 1px solid var(--glass-border);
@@ -87,10 +87,32 @@
       background: rgba(255,255,255,.06);
     }
 
-    .title {
+    .menu-btn {
+      position: absolute;
+      right: 0;
+      border: none;
+      background: transparent;
+      color: #888;
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
       font-weight: 600;
-      font-size: clamp(20px, 3vw, 28px);
-      letter-spacing: 0.3px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .menu-btn:hover {
+      color: #aaa;
+    }
+
+    .title {
+      font-weight: 800;
+      font-size: clamp(24px, 4vw, 36px);
+      letter-spacing: 0.5px;
     }
 
     .subtitle {
@@ -215,6 +237,50 @@
       justify-content: center;
     }
 
+    /* Grid Container */
+    .grid-container {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 300px;
+      transform: translateY(-50%);
+      overflow: hidden;
+      display: none;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .grid-container.show {
+      display: block;
+    }
+
+    .grid-bubbles {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+      justify-items: center;
+    }
+
+    .grid-bubble {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      overflow: hidden;
+      border: 2px solid transparent;
+      aspect-ratio: 1;
+    }
+
+    .grid-bubble:hover {
+      transform: scale(1.1);
+      border-color: var(--glass-border);
+      box-shadow: 0 0 20px rgba(255,255,255,0.2);
+    }
+
     .timeline-track {
       position: relative;
       width: 80%;
@@ -252,7 +318,7 @@
       position: absolute;
       border-radius: 50%;
       cursor: pointer;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       will-change: transform;
       overflow: hidden;
       border: 2px solid transparent;
@@ -263,7 +329,7 @@
     .bubble.active {
       transform: scale(2.5) translateY(-50%);
       border-color: rgba(255,255,255,0.9);
-      box-shadow: 0 0 80px rgba(255,255,255,0.6), 0 30px 60px rgba(0,0,0,0.5);
+      box-shadow: 0 0 80px rgba(0, 100, 200, 0.6), 0 30px 60px rgba(0,0,0,0.5);
       z-index: 10;
       left: 50% !important;
       margin-left: -125px; /* Half of 250px to center perfectly */
@@ -281,6 +347,7 @@
     .bubble.hidden {
       opacity: 0;
       pointer-events: none;
+      transition: none !important;
     }
 
     .bubble:hover:not(.hidden) {
@@ -542,10 +609,10 @@
     <a href="index.html" class="back-btn" aria-label="Voltar para página inicial">
       ←
     </a>
-    <div>
-      <h1 class="title">My memories</h1>
-    </div>
-    <div></div> <!-- Spacer for centering -->
+    <h1 class="title">Mymories</h1>
+    <button class="menu-btn" id="menuBtn" aria-label="Toggle view">
+      ⋯
+    </button>
   </header>
 
   <!-- Loading -->
@@ -557,6 +624,13 @@
   <div class="timeline-container" id="timelineContainer">
     <div class="timeline-track" id="timelineTrack"></div>
     <!-- Bubbles will be generated dynamically -->
+  </div>
+
+  <!-- Grid Container -->
+  <div class="grid-container" id="gridContainer">
+    <div class="grid-bubbles" id="gridBubbles">
+      <!-- Grid bubbles will be generated dynamically -->
+    </div>
   </div>
 
   <!-- Timeline Slider -->
@@ -590,15 +664,19 @@
         this.currentIndex = 0;
         this.timelineContainer = document.getElementById('timelineContainer');
         this.timelineTrack = document.getElementById('timelineTrack');
+        this.gridContainer = document.getElementById('gridContainer');
+        this.gridBubbles = document.getElementById('gridBubbles');
         this.sliderThumb = document.getElementById('sliderThumb');
         this.firstYear = document.getElementById('firstYear');
         this.lastYear = document.getElementById('lastYear');
         this.modal = document.getElementById('bubbleModal');
         this.loading = document.getElementById('loading');
+        this.menuBtn = document.getElementById('menuBtn');
         
         this.isDragging = false;
         this.startX = 0;
         this.currentTranslate = 0;
+        this.isGridView = false;
         
         this.init();
       }
@@ -607,6 +685,7 @@
         try {
           await this.loadBubbles();
           this.createTimelineBubbles();
+          this.createGridBubbles();
           this.setupSlider();
           this.addEventListeners();
           this.setActiveBubble(0);
@@ -700,6 +779,33 @@
         });
       }
 
+      createGridBubbles() {
+        this.gridBubbles.innerHTML = '';
+        
+        this.bubbles.forEach((bubbleData, index) => {
+          const gridBubble = document.createElement('div');
+          gridBubble.className = 'grid-bubble';
+          gridBubble.id = `grid-${bubbleData.id}`;
+          
+          const content = document.createElement('div');
+          content.className = 'bubble-content';
+          
+          if (bubbleData.hasPhoto && bubbleData.photo) {
+            const img = document.createElement('img');
+            img.className = 'bubble-photo';
+            img.src = bubbleData.photo;
+            img.alt = bubbleData.title;
+            content.appendChild(img);
+          }
+          
+          gridBubble.appendChild(content);
+          this.gridBubbles.appendChild(gridBubble);
+          
+          gridBubble.bubbleData = bubbleData;
+          gridBubble.bubbleIndex = index;
+        });
+      }
+
       setupSlider() {
         if (this.bubbles.length > 0) {
           const firstYear = new Date(this.bubbles[0].rawDate).getFullYear();
@@ -724,9 +830,9 @@
           memoryBar.className = 'timeline-memory-bar';
           memoryBar.bubbleIndex = index;
           
-          // Position the bar along the slider track
+          // Position the bar along the slider track (center the 8px bar)
           const trackWidth = sliderTrack.offsetWidth;
-          const barPosition = (index / (this.bubbles.length - 1)) * trackWidth;
+          const barPosition = (index / (this.bubbles.length - 1)) * trackWidth - 4; // Center 8px bar
           memoryBar.style.left = `${barPosition}px`;
           
           sliderTrack.appendChild(memoryBar);
@@ -745,6 +851,8 @@
             bubble.classList.add('active');
             bubble.style.left = '50%';
             bubble.style.marginLeft = '-125px';
+            bubble.style.width = '';
+            bubble.style.height = '';
           } else if (i === index - 1) {
             // Previous bubble on the left
             bubble.classList.add('inactive');
@@ -762,8 +870,18 @@
             bubble.style.width = '';
             bubble.style.height = '';
           } else {
-            // Hide all other bubbles
+            // Hide bubble immediately without transition
+            bubble.style.transition = 'none';
             bubble.classList.add('hidden');
+            
+            // Clear styles after the hidden state is applied
+            requestAnimationFrame(() => {
+              bubble.style.left = '';
+              bubble.style.marginLeft = '';
+              bubble.style.width = '';
+              bubble.style.height = '';
+              bubble.style.transform = '';
+            });
           }
         });
         
@@ -797,6 +915,9 @@
           } else if (index === this.currentIndex) {
             // Active bubble - no parallax
             bubble.style.transform = 'translateY(-50%)';
+          } else {
+            // Hidden bubbles - clear transform to prevent any visual artifacts
+            bubble.style.transform = '';
           }
         });
       }
@@ -868,6 +989,21 @@
             this.hideBubbleDetail();
           }
         });
+
+        // Menu button handler
+        this.menuBtn.addEventListener('click', () => {
+          this.toggleView();
+        });
+
+        // Grid bubble click handlers
+        document.querySelectorAll('.grid-bubble').forEach(bubble => {
+          bubble.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.setActiveBubble(bubble.bubbleIndex);
+            this.showBubbleDetail(bubble.bubbleData);
+            this.toggleView(); // Return to timeline view
+          });
+        });
       }
 
       handleSliderDrag(e) {
@@ -931,6 +1067,22 @@
 
       hideBubbleDetail() {
         this.modal.classList.remove('show');
+      }
+
+      toggleView() {
+        this.isGridView = !this.isGridView;
+        
+        if (this.isGridView) {
+          // Show grid view
+          this.timelineContainer.style.display = 'none';
+          this.gridContainer.classList.add('show');
+          document.getElementById('timelineSlider').style.display = 'none';
+        } else {
+          // Show timeline view
+          this.timelineContainer.style.display = 'flex';
+          this.gridContainer.classList.remove('show');
+          document.getElementById('timelineSlider').style.display = 'flex';
+        }
       }
     }
 

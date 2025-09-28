@@ -78,6 +78,7 @@ def scan_bubbles_folder(bubbles_path="bubbles"):
                 "id": f"bubble-{len(bubbles)}",
                 "title": config['title'],
                 "description": config['description'],
+                "location": config.get('location', ''),  # Add location field, default to empty string
                 "photo": photo_path,
                 "date": folder_name,
                 "folderName": folder_name,
@@ -153,7 +154,7 @@ def main():
         print("   2. Open: http://localhost:8000/mymory.html")
         print("\nTo add new bubbles:")
         print("   1. Create folder: bubbles/YYYY-MM-DDTHH-MM-SS/")
-        print("   2. Add config.json with title, description, has_photo")
+        print("   2. Add config.json with title, description, has_photo, location (optional)")
         print("   3. Add photo file (optional)")
         print("   4. Run this script again")
     else:
