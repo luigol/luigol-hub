@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Simple HTTP Server for Mymory
+Simple HTTP Server for Luigol Hub
 Serves the files locally to avoid CORS issues
 """
 
@@ -22,20 +22,18 @@ def start_server():
     try:
         with socketserver.TCPServer(("", PORT), Handler) as httpd:
             print("=" * 50)
-            print("Mymory Local Server")
+            print("Luigol Hub Local Server")
             print("=" * 50)
             print(f"Server running at: http://localhost:{PORT}")
             print(f"Serving directory: {script_dir}")
             print("")
             print("Your files:")
             print(f"  • Main page: http://localhost:{PORT}/index.html")
-            print(f"  • Memories: http://localhost:{PORT}/mymory.html")
-            print(f"  • Goals: http://localhost:{PORT}/goals.html")
             print(f"  • Bitcoin: http://localhost:{PORT}/bitcoin.html")
             print("")
-            print("To update bubbles:")
-            print("  1. Create new bubble folders")
-            print("  2. Run: python scan_bubbles.py")
+            print("To update content:")
+            print("  1. Create new content folders")
+            print("  2. Run: python scan_content.py")
             print("  3. Refresh browser")
             print("")
             print("Press Ctrl+C to stop the server")
