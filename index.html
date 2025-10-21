@@ -134,6 +134,7 @@
       align-items: center;
       padding: var(--space);
       gap: var(--space);
+      min-height: 80px; /* Ensure consistent height for all boxes */
     }
 
     .box-icon {
@@ -168,12 +169,13 @@
       opacity: 0;
       overflow: hidden;
       transition: all 0.4s ease;
-      padding: 0 var(--space) var(--space);
+      padding: 0 var(--space) 0; /* No bottom padding when collapsed */
     }
 
     .identity-box.expanded .box-content {
       max-height: 500px;
       opacity: 1;
+      padding: 0 var(--space) var(--space); /* Add bottom padding only when expanded */
     }
 
     .box-description {
@@ -561,6 +563,7 @@
       .box-header {
         padding: calc(var(--space) * 0.75);
         gap: calc(var(--space) * 0.75);
+        min-height: 64px; /* Consistent height for mobile */
       }
 
       .box-icon {
@@ -712,7 +715,7 @@
           <div class="box-icon">
             <img src="./assets/ingles_espanhol.png" alt="Languages icon" />
           </div>
-          <div class="box-title" id="languages-title">Falo Português (nativo), Inglês e Espanhol</div>
+          <div class="box-title" id="languages-title">Falo Português, Inglês e Espanhol</div>
         </div>
       </div>
 
@@ -838,7 +841,7 @@
         "developer-description": "Atuo como desenvolvedor, mas me vejo antes de tudo como um criador de ideias. Utilizo da lógica de programação para encontrar soluções de problemas reais, tanto no front quanto no back-end.",
         "developer-button": "Ver GitHub",
         
-        "languages-title": "Falo Português (nativo), Inglês e Espanhol",
+        "languages-title": "Falo Português, Inglês e Espanhol",
         
         "sports-title": "Atleta e apaixonado por Futebol",
         "sports-description": "Desde criança, sonhava em ser jogador de futebol e por isso nunca parei de amar o esporte. Hoje continuo jogando semanalmente, pratico musculação e nunca me envolvi com álcool ou drogas. Sou extremamente disciplinado e focado. Meu time do coração é o Palmeiras.",
@@ -926,7 +929,7 @@
         "developer-description": "Actúo como desarrollador, pero me veo ante todo como un creador de ideas. Utilizo la lógica de programación para encontrar soluciones a problemas reales, tanto en front-end como en back-end.",
         "developer-button": "Ver GitHub",
         
-        "languages-title": "Hablo Portugués (nativo), Inglés y Español",
+        "languages-title": "Hablo Portugués, Inglés y Español",
         
         "sports-title": "Atleta y apasionado por el Fútbol",
         "sports-description": "Desde niño, soñaba con ser jugador de fútbol y por eso nunca dejé de amar el deporte. Hoy continúo jugando semanalmente, practico musculación y nunca me involucré con alcohol o drogas. Soy extremadamente disciplinado y enfocado. Mi equipo del corazón es el Palmeiras.",
@@ -1177,7 +1180,8 @@
         { date: '2025-05-31', price: 107135.33 },
         { date: '2025-06-30', price: 115758.20 },
         { date: '2025-07-31', price: 108236.71 },
-        { date: '2025-08-31', price: 112785.47 }
+        { date: '2025-08-31', price: 114056.08 },
+        { date: '2025-10-01', price: 118503.00 }
       ];
       
       const data = csvData.map(item => [
