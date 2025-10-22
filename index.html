@@ -178,6 +178,22 @@
       padding: 0 var(--space) var(--space); /* Add bottom padding only when expanded */
     }
 
+    /* Text reveal animation for expanded content */
+    .box-content .box-description,
+    .box-content .box-button {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      transition-delay: 0s;
+    }
+
+    .identity-box.expanded .box-content .box-description,
+    .identity-box.expanded .box-content .box-button {
+      opacity: 1;
+      transform: translateY(0);
+      transition-delay: 0.2s;
+    }
+
     .box-description {
       margin-bottom: var(--space);
       color: var(--muted);
@@ -283,7 +299,19 @@
       opacity: 0.9;
       object-fit: contain;
       background-color: transparent;
-      transition: opacity 0.2s ease;
+      transition: opacity 0.2s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Liquid hover animation for social icons */
+    .social-btn:hover img {
+      transform: scale(1.12) rotate(4deg);
+    }
+
+    /* Prevent animation on mobile/touch devices */
+    @media (hover: none) and (pointer: coarse) {
+      .social-btn:hover img {
+        transform: none;
+      }
     }
 
     /* Social button hover effects */
@@ -612,6 +640,18 @@
       .social-btn:hover,
       .lang-btn:hover {
         transform: none !important;
+      }
+      
+      .box-content .box-description,
+      .box-content .box-button {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+      
+      .social-btn img {
+        transform: none !important;
+        transition: none !important;
       }
     }
 
