@@ -99,6 +99,50 @@
       font-size: clamp(14px, 1.7vw, 16px);
     }
 
+    /* Dynamic Parallax Subtitle Container */
+    .dynamic-subtitle {
+      position: relative;
+      width: clamp(260px, 70vw, 420px);
+      height: 56px;
+      margin: 0 auto var(--space);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius);
+      background: var(--glass-bg);
+      -webkit-backdrop-filter: blur(12px) saturate(160%);
+      backdrop-filter: blur(12px) saturate(160%);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.45), inset 0 0 0 1px rgba(255,255,255,0.08);
+      transform-style: preserve-3d;
+      overflow: hidden;
+      transition: transform 0.2s ease-out;
+      cursor: none;
+    }
+
+    .text-track {
+      position: absolute;
+      display: flex;
+      width: max-content;
+      animation: slide 12s linear infinite;
+      z-index: 2;
+    }
+
+    .text-item {
+      font-size: clamp(20px, 6vw, 24px);
+      font-weight: 600;
+      color: var(--muted);
+      white-space: nowrap;
+      margin: 0 30px;
+      user-select: none;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    @keyframes slide {
+      0%   { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+
     /* Identity Boxes Section */
     .identity-boxes {
       margin-bottom: calc(var(--space) * 2);
@@ -391,12 +435,6 @@
       margin-top: calc(var(--space) * 2);
     }
 
-    .footer-quote {
-      font-style: italic;
-      margin-bottom: 8px;
-      opacity: 0.8;
-    }
-
     /* Language Selector */
     .language-selector {
       position: fixed;
@@ -537,6 +575,16 @@
         width: 20px;
         height: 20px;
       }
+
+      .dynamic-subtitle {
+        width: clamp(240px, 85vw, 380px);
+        height: 48px;
+      }
+
+      .text-item {
+        font-size: clamp(18px, 5vw, 22px);
+        margin: 0 20px;
+      }
     }
 
     /* Accessibility */
@@ -562,6 +610,10 @@
       .social-btn img {
         transform: none !important;
         transition: none !important;
+      }
+      
+      .text-track {
+        animation: none !important;
       }
     }
 
@@ -592,7 +644,13 @@
       <div class="avatar" role="img" aria-label="Minha foto de perfil"></div>
     </div>
       <h1 id="title">Luigol</h1>
-      <p class="subtitle" id="subtitle">Luigi • São Paulo / Maceió • 21 Anos</p>
+      <div class="dynamic-subtitle" id="dynamicSubtitle">
+        <div class="text-track">
+          <div class="text-item" id="subtitle-1">Luigi Caldas</div>
+          <div class="text-item" id="subtitle-2">São Paulo / Maceió</div>
+          <div class="text-item" id="subtitle-3">21 Anos</div>
+        </div>
+      </div>
     </header>
 
     <!-- Identity Boxes Section -->
@@ -730,9 +788,8 @@
     const translations = {
       pt: {
         title: "Luigol",
-        subtitle: "Luigi • São Paulo / Maceió • 21 Anos",
+        subtitle: "Luigi Caldas • São Paulo / Maceió • 21 Anos",
         footer: "Luigol. Todos os direitos reservados.",
-        footerQuote: "",
         
         // Identity boxes
         "bitcoin-title": "Bitcoiner",
@@ -765,9 +822,8 @@
       },
       en: {
         title: "Luigol",
-        subtitle: "Luigi • São Paulo / Maceió • 21 Years Old",
+        subtitle: "Luigi Caldas • São Paulo / Maceió • 21 Years Old",
         footer: "Luigol. All rights reserved.",
-        footerQuote: "",
         
         // Identity boxes
         "bitcoin-title": "Bitcoiner",
@@ -800,9 +856,8 @@
       },
       es: {
         title: "Luigol",
-        subtitle: "Luigi • São Paulo / Maceió • 21 Años",
+        subtitle: "Luigi Caldas • São Paulo / Maceió • 21 Años",
         footer: "Luigol. Todos los derechos reservados.",
-        footerQuote: "",
         
         // Identity boxes
         "bitcoin-title": "Bitcoiner",
@@ -838,21 +893,63 @@
     // Language management
     let currentLanguage = localStorage.getItem('selectedLanguage') || 'pt';
 
+    // Parallax effect for dynamic subtitle
+    function initializeParallaxSubtitle() {
+      const container = document.getElementById('dynamicSubtitle');
+      if (!container) return;
+
+      // Mouse parallax
+      document.addEventListener('mousemove', (e) => {
+        const x = (e.clientX / window.innerWidth - 0.5) * 2;
+        const y = (e.clientY / window.innerHeight - 0.5) * 2;
+        const rotateX = y * -8;
+        const rotateY = x * 8;
+        container.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      });
+
+      document.addEventListener('mouseleave', () => {
+        container.style.transform = 'rotateX(0deg) rotateY(0deg)';
+      });
+
+      // Auto parallax for mobile
+      if (/Mobi|Android/i.test(navigator.userAgent)) {
+        let angle = 0;
+        setInterval(() => {
+          angle += 0.03;
+          const x = Math.sin(angle) * 8;
+          const y = Math.cos(angle) * 8;
+          container.style.transform = `rotateX(${y}deg) rotateY(${x}deg)`;
+        }, 50);
+      }
+    }
+
     // Update content based on current language
     function updateContent(lang) {
       const translation = translations[lang];
       
       // Update basic elements
-      const basicElements = {
-        title: document.getElementById('title'),
-        subtitle: document.getElementById('subtitle'),
-        footer: document.getElementById('footer'),
-        footerQuote: document.getElementById('footerQuote')
+      const titleElement = document.getElementById('title');
+      const footerElement = document.getElementById('footer');
+      
+      if (titleElement && translation.title) {
+        titleElement.textContent = translation.title;
+      }
+      
+      if (footerElement && translation.footer) {
+        footerElement.textContent = translation.footer;
+      }
+
+      // Dynamic subtitle text based on language
+      const subtitleTexts = {
+        pt: ['Luigi Caldas', 'São Paulo / Maceió', '21 Anos'],
+        en: ['Luigi Caldas', 'São Paulo / Maceió', '21 Years Old'],
+        es: ['Luigi Caldas', 'São Paulo / Maceió', '21 Años']
       };
 
-      Object.keys(basicElements).forEach(key => {
-        if (basicElements[key] && translation[key]) {
-          basicElements[key].textContent = translation[key];
+      subtitleTexts[lang].forEach((text, index) => {
+        const element = document.getElementById(`subtitle-${index + 1}`);
+        if (element) {
+          element.textContent = text;
         }
       });
 
@@ -991,6 +1088,7 @@
       initializeIdentityBoxes();
       initializeLanguageSelector();
       initializeSmoothScrolling();
+      initializeParallaxSubtitle();
       
       // Update content with saved language
     updateContent(currentLanguage);
