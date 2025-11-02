@@ -655,7 +655,22 @@
 
     <!-- Identity Boxes Section -->
     <section class="identity-boxes" aria-label="Minhas identidades">
-      <!-- Box 1: Bitcoiner -->
+      <!-- Box 1: Paulista -->
+      <div class="identity-box" tabindex="0" role="button" aria-expanded="false" aria-describedby="paulista-desc">
+        <div class="box-header">
+          <div class="box-icon">
+            <img src="./assets/sao_paulo_flag.png" alt="Paulista icon" />
+          </div>
+          <div class="box-title" id="paulista-title">Paulista</div>
+        </div>
+        <div class="box-content" id="paulista-desc">
+          <p class="box-description" id="paulista-description">
+            Eu nasci e cresci na Zona Leste da cidade de São Paulo. Sou mais um sobrevivente da linha vermelha.
+          </p>
+        </div>
+      </div>
+
+      <!-- Box 2: Bitcoiner -->
       <div class="identity-box" tabindex="0" role="button" aria-expanded="false" aria-describedby="bitcoin-desc">
         <div class="box-header">
           <div class="box-icon">
@@ -671,7 +686,7 @@
         </div>
       </div>
 
-      <!-- Box 2: Student -->
+      <!-- Box 3: Student -->
       <div class="identity-box" tabindex="0" role="button" aria-expanded="false" aria-describedby="student-desc">
         <div class="box-header">
           <div class="box-icon">
@@ -686,7 +701,7 @@
         </div>
       </div>
 
-      <!-- Box 3: YouTube -->
+      <!-- Box 4: YouTube -->
       <div class="identity-box" tabindex="0" role="button" aria-expanded="false" aria-describedby="youtube-desc">
         <div class="box-header">
           <div class="box-icon">
@@ -702,7 +717,7 @@
         </div>
       </div>
 
-      <!-- Box 4: Developer -->
+      <!-- Box 5: Developer -->
       <div class="identity-box" tabindex="0" role="button" aria-expanded="false" aria-describedby="developer-desc">
         <div class="box-header">
           <div class="box-icon">
@@ -718,7 +733,7 @@
         </div>
       </div>
 
-      <!-- Box 5: Languages -->
+      <!-- Box 6: Languages -->
       <div class="identity-box" tabindex="0" role="button" aria-expanded="false">
         <div class="box-header">
           <div class="box-icon">
@@ -728,7 +743,7 @@
         </div>
       </div>
 
-      <!-- Box 6: Sports (merged) -->
+      <!-- Box 7: Sports (merged) -->
       <div class="identity-box" tabindex="0" role="button" aria-expanded="false" aria-describedby="sports-desc">
         <div class="box-header">
           <div class="box-icon">
@@ -743,7 +758,7 @@
         </div>
       </div>
 
-      <!-- Box 7: EDGE Academy -->
+      <!-- Box 8: EDGE Academy -->
       <div class="identity-box" tabindex="0" role="button" aria-expanded="false" aria-describedby="edge-desc">
         <div class="box-header">
           <div class="box-icon">
@@ -816,6 +831,9 @@
         "edge-title": "Bolsista no programa EDGE Academy",
         "edge-description": "O EDGE Academy é um programa de formação de talentos e excelência acadêmica do Centro de Inovação EDGE, voltado para alunos de Engenharia e Ciência da Computação.",
         
+        "paulista-title": "Paulista",
+        "paulista-description": "Eu nasci e cresci na Zona Leste da cidade de São Paulo. Sou mais um sobrevivente da linha vermelha.",
+        
         // Tooltips
         "youtube-tooltip": "LUIGOL",
         "github-tooltip": "@luigol",
@@ -851,6 +869,9 @@
         "edge-title": "EDGE Academy Scholarship Student",
         "edge-description": "EDGE Academy is a talent development and academic excellence program of the EDGE Innovation Center, aimed at Engineering and Computer Science students.",
         
+        "paulista-title": "Paulista",
+        "paulista-description": "I was born and raised in the East Zone of São Paulo. I'm another survivor of the red line.",
+        
         // Tooltips
         "youtube-tooltip": "LUIGOL",
         "github-tooltip": "@luigol",
@@ -885,6 +906,9 @@
         
         "edge-title": "Becario en el programa EDGE Academy",
         "edge-description": "EDGE Academy es un programa de formación de talentos y excelencia académica del Centro de Innovación EDGE, dirigido a estudiantes de Ingeniería y Ciencias de la Computación.",
+        
+        "paulista-title": "Paulista",
+        "paulista-description": "Nací y crecí en la Zona Este de la ciudad de São Paulo. Soy otro sobreviviente de la línea roja.",
         
         // Tooltips
         "youtube-tooltip": "LUIGOL",
@@ -958,7 +982,7 @@
       });
 
       // Update identity boxes
-      const boxTypes = ['bitcoin', 'student', 'youtube', 'developer', 'languages', 'sports', 'edge'];
+      const boxTypes = ['bitcoin', 'student', 'youtube', 'developer', 'languages', 'sports', 'edge', 'paulista'];
       boxTypes.forEach(type => {
         const titleElement = document.getElementById(`${type}-title`);
         const descElement = document.getElementById(`${type}-description`);
